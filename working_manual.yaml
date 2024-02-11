@@ -1,0 +1,8 @@
+id: oomlout_oomp_utility_oomlout_generate_report
+name: "Oomlout Generate Report"
+description: "This is part of OOMP the Oopen Organization Method For Parts. For more details: https://github.com/oomlout/oomp_base  "
+readme_manual: |
+  ## What it does
+  This utility generates a report in csv and yaml format into the report directory if the current oomp
+  ## Usage
+  * run working.py from within an oomp folder
