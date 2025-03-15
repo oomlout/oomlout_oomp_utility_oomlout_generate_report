@@ -47,6 +47,7 @@ def main(**kwargs):
     #all parts loaded now make csv
     print(f"creating csv")
     create_csv(**kwargs)
+    create_md(**kwargs)
 
 def create_csv(**kwargs):
     import csv
@@ -77,6 +78,47 @@ def create_csv(**kwargs):
                     row.append(parts[key].get(k, ""))
                 writer.writerow(row)
         
+def create_md(**kwargs):
+    folder = kwargs.get("folder", os.path.dirname(__file__))
+    folder = folder.replace("\\","/").replace("parts","")
+    outputs = configuration.get("outputs", {})
+    for output in outputs:
+        name = output.get("name", "report")
+        print(f"creating md for {name}")
+        file_md = os.path.join(folder, f"report/{name}.md")
+        #create folder if it does not exist
+        os.makedirs(os.path.dirname(file_md), exist_ok=True)
+        with open(file_md, 'w') as file:
+            mode = "normal"
+            mode = "table"
+            if mode == "normal":
+                for key in parts:
+                    file.write(f"## {key}\n")
+                    for k in parts[key]:
+                        file.write(f"### {k}\n")
+                        file.write(f"{parts[key][k]}\n")
+                    file.write("\n")
+            if mode == "table":
+                keys = output.get("keys", [])
+                if keys == []:
+                    keys = set()
+                    for key in parts:
+                        for k in parts[key]:
+                            keys.add(k)        
+                file.write("| id |")
+                for key in keys:
+                    file.write(f" {key} |")
+                file.write("\n")
+                file.write("|---|")
+                for key in keys:
+                    file.write("---|")
+                file.write("\n")
+                for key in parts:
+                    file.write(f"| {key} |")
+                    for k in keys:
+                        file.write(f" {parts[key].get(k, '')} |")
+                    file.write("\n")
+                file.write("\n")
 
 def create_recursive(**kwargs):
     folder = kwargs.get("folder", os.path.dirname(__file__))
