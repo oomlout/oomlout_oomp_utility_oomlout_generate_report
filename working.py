@@ -41,13 +41,19 @@ def main(**kwargs):
     folder = kwargs.get("folder", f"{os.path.dirname(__file__)}/parts")
     folder = folder.replace("\\","/")
     
+    filt = kwargs.get("filter", "")
+
     kwargs["configuration"] = configuration
     print(f"running utility oomlout_oomp_utility_oomlout_generate_report: {folder}")
-    create_recursive(**kwargs) ## load all parts into parts dictionary
-    #all parts loaded now make csv
-    print(f"creating csv")
-    create_csv(**kwargs)
-    create_md(**kwargs)
+    if filt == "":
+        create_recursive(**kwargs) ## load all parts into parts dictionary
+        #all parts loaded now make csv
+        print(f"creating csv")
+        create_csv(**kwargs)
+        create_md(**kwargs)
+    else:
+        print(f"******  skipping because filter is present  ******")
+        
 
 def create_csv(**kwargs):
     import csv
